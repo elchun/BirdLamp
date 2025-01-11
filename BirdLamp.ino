@@ -7,6 +7,11 @@
 #define NUMPIXELS 12  //number of Led on the light strip
 
 #define NUMSETTINGS 10
+#define SETTING_ADDRESS 0
+
+#include <FlashStorage.h>
+FlashStorage(SETTING_STORAGE, int);
+
 
 
 Adafruit_NeoPixel pixels(NUMPIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);
@@ -24,6 +29,8 @@ void setup() {
   pixels.setBrightness(20);
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  light_setting = SETTING_STORAGE.read();
 }
 
 /**
@@ -31,6 +38,7 @@ void setup() {
  */
 void update_light_setting() {
   light_setting = (light_setting + 1) % NUMSETTINGS;
+  SETTING_STORAGE.write(light_setting);
   Serial.println(light_setting);
 }
 
