@@ -37,8 +37,20 @@ void setup() {
  * Increment light setting and perform mod.
  */
 void update_light_setting() {
-  light_setting = (light_setting + 1) % NUMSETTINGS;
-  SETTING_STORAGE.write(light_setting);
+  delay(300);
+  if (digitalRead(BUTTON_PIN) == LOW) {
+    pixels.fill(pixels.Color(255, 0, 0), 0, 12);
+    pixels.show();
+    SETTING_STORAGE.write(light_setting);
+    delay(100);
+    pixels.fill(pixels.Color(0, 255, 0), 0, 12);
+    pixels.show();
+    while (digitalRead(BUTTON_PIN) == LOW) {
+      delay(10);
+    }
+  } else {
+    light_setting = (light_setting + 1) % NUMSETTINGS;
+  }
   Serial.println(light_setting);
 }
 
@@ -49,7 +61,7 @@ void update_light_setting() {
 bool button_was_clicked() {
   if (digitalRead(BUTTON_PIN) == LOW) {
     while (digitalRead(BUTTON_PIN) == LOW) {
-      delay(10);
+      delay(1);
     }
     return true;
   }
@@ -394,26 +406,43 @@ void loop() {
   switch (light_setting) {
     case 0:
       rainbow(10);
+      break;
     case 1:
       green();
+      break;
     case 2:
       solid_color(69, 9, 59);
+        break;
     case 3:
       solid_color(100, 100, 255);
+      break;
+
     case 4:
       red_snake();
+      break;
+
     case 5:
       all_on();
+      break;
+
     case 6:
       some_solid_color(80, 20, 20, solid_idxs, (sizeof(solid_idxs) / sizeof(int)));
       // solid_color(8, 8, 15);
       // night_mode();
+      break;
+
     case 7:
       gold_random(50);
+      break;
+
     case 8:
       lightning(50);
+      break;
+
     case 9:
       off();
+      break;
+
   }
 
   //  if (button_was_clicked()) {
